@@ -46,4 +46,14 @@ def col2jsonschema(col: psycopg2.extras.DictRow) -> dict:
     dict
         jsonschema of the column
     """
-    return {}
+    result = {}
+
+    if col['character_maximum_length'] is not None:
+        result['type'] = ['string']
+        result['maxLength'] = col['character_maximum_length']
+
+    if col['is_nullable']:
+        if 'type' in result:
+            result['type'].append('null')
+
+    return result
